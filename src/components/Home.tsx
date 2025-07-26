@@ -32,7 +32,12 @@ const Home: React.FC = () => {
     };
     
     localStorage.setItem(`surprise_${surpriseId}`, JSON.stringify(surpriseData));
-    const link = `${window.location.origin}/surprise/${surpriseId}`;
+    const params = new URLSearchParams({
+      userName,
+      partnerName,
+      reasons: JSON.stringify(reasons.filter(r => r.trim() !== ''))
+    }).toString();
+    const link = `${window.location.origin}/surprise/${surpriseId}?${params}`;
     setGeneratedLink(link);
     setStep(5);
   };

@@ -83,9 +83,29 @@ const SurprisePage: React.FC = () => {
       const data = localStorage.getItem(`surprise_${id}`);
       if (data) {
         setSurpriseData(JSON.parse(data));
+      } else {
+        // Si no hay datos en localStorage, intenta leerlos de la URL
+        const params = new URLSearchParams(location.search);
+        const userName = params.get('userName');
+        const partnerName = params.get('partnerName');
+        const reasonsRaw = params.get('reasons');
+        let reasons: string[] = [];
+        try {
+          reasons = reasonsRaw ? JSON.parse(reasonsRaw) : [];
+        } catch {
+          reasons = [];
+        }
+        if (userName && partnerName && reasons.length === 3) {
+          setSurpriseData({
+            userName,
+            partnerName,
+            reasons,
+            timestamp: Date.now(),
+          });
+        }
       }
     }
-  }, [id]);
+  }, [id, location.search]);
 
   const handleGiftClick = (index: number) => {
     if (index === 3 && openedGifts.slice(0, 3).some(opened => !opened)) {
