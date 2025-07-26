@@ -79,7 +79,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           <h1 className="text-3xl font-romantic font-bold text-gray-800 mb-2">
-            Carta de Amor
+            BeLovely1
           </h1>
           <p className="text-gray-600 font-modern">
             Crea una sorpresa especial para esa persona que amas
@@ -125,7 +125,7 @@ const Home: React.FC = () => {
         {step === 2 && (
           <div className="fade-in">
             <h2 className="text-xl font-romantic font-semibold text-gray-800 mb-4 text-center">
-              Cuéntame 3 razones por las que amas a tu pareja
+              Cuéntame 3 razones por las que amas a esa persona especial
             </h2>
             <div className="space-y-4">
               {reasons.map((reason, index) => (
@@ -150,7 +150,7 @@ const Home: React.FC = () => {
         {step === 3 && (
           <div className="fade-in">
             <h2 className="text-xl font-romantic font-semibold text-gray-800 mb-4 text-center">
-              ¿Cómo se llama esa persona especial?
+              ¿Cómo se llama esa hermosa persona?
             </h2>
             <input
               type="text"

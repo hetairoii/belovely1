@@ -83,8 +83,7 @@ const SurprisePage: React.FC = () => {
       const data = localStorage.getItem(`surprise_${id}`);
       if (data) {
         setSurpriseData(JSON.parse(data));
-      } else {
-        // Si no hay datos en localStorage, intenta leerlos de la URL
+      } else {        
         const params = new URLSearchParams(location.search);
         const userName = params.get('userName');
         const partnerName = params.get('partnerName');
@@ -196,7 +195,7 @@ const SurprisePage: React.FC = () => {
               >
                 Parece que te has vuelto alguien muy especial para{' '}
                 <span className="font-semibold text-pink-600">{surpriseData.userName}</span>, 
-                así que te preparó esta sorpresa ¿Lista para ver?
+                así que te preparó esta sorpresa ¿La vemos juntos?
               </motion.p>
 
               <motion.button
@@ -314,7 +313,7 @@ const SurprisePage: React.FC = () => {
                     >
                       <Sparkles className="w-12 h-12 text-white mx-auto mb-4 pulse-heart" />
                       <p className="text-white font-romantic font-bold text-2xl">
-                        ¿En serio pensaste que eran solo 3? 😄
+                        ¿De verdad pensaste que eran solo 3? 😄
                       </p>
                     </motion.div>
                   )}
