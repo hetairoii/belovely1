@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Gift, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
@@ -7,6 +8,7 @@ const Home: React.FC = () => {
   const [reasons, setReasons] = useState(['', '', '']);
   const [partnerName, setPartnerName] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
+  const navigate = useNavigate();
 
   const handleNext = () => {
     if (step < 4) {
