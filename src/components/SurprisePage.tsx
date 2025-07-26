@@ -312,7 +312,7 @@ const SurprisePage: React.FC = () => {
                   className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-pink-100"
                 >
                   <h3 className="text-3xl font-romantic font-bold text-center text-gray-800 mb-8">
-                    Más de 100 razones por las que te amamos ❤️
+                    Son muchas las razones por las que te quiero ❤️
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
