@@ -1,12 +1,15 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://jmsilveira22:peritanugget@belovely1.nze9mr6.mongodb.net/?retryWrites=true&w=majority&appName=belovely1');
+mongoose.connect(process.env.mongo_uri);
 
 const SurpriseSchema = new mongoose.Schema({
   userName: String,
