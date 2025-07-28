@@ -78,33 +78,15 @@ const SurprisePage: React.FC = () => {
     "Por cómo me amas más allá de las palabras", "Por tu manera de ser mi regalo de la vida"
   ];
 
+  // ...existing code...
   useEffect(() => {
     if (id) {
-      const data = localStorage.getItem(`surprise_${id}`);
-      if (data) {
-        setSurpriseData(JSON.parse(data));
-      } else {        
-        const params = new URLSearchParams(location.search);
-        const userName = params.get('userName');
-        const partnerName = params.get('partnerName');
-        const reasonsRaw = params.get('reasons');
-        let reasons: string[] = [];
-        try {
-          reasons = reasonsRaw ? JSON.parse(reasonsRaw) : [];
-        } catch {
-          reasons = [];
-        }
-        if (userName && partnerName && reasons.length === 3) {
-          setSurpriseData({
-            userName,
-            partnerName,
-            reasons,
-            timestamp: Date.now(),
-          });
-        }
-      }
+      fetch(`https://TU_API_URL/surprise/${id}`)
+        .then(res => res.json())
+        .then(data => setSurpriseData(data));
     }
-  }, [id, location.search]);
+  }, [id]);
+  // ...existing code...
 
   const handleGiftClick = (index: number) => {
     if (index === 3 && openedGifts.slice(0, 3).some(opened => !opened)) {

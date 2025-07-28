@@ -22,22 +22,24 @@ const Home: React.FC = () => {
     setReasons(newReasons);
   };
 
-  const generateSurprise = () => {
-    const surpriseId = Math.random().toString(36).substr(2, 9);
+  const generateSurprise = async () => {
     const surpriseData = {
       userName,
       reasons: reasons.filter(r => r.trim() !== ''),
       partnerName,
       timestamp: Date.now()
     };
-    
-    localStorage.setItem(`surprise_${surpriseId}`, JSON.stringify(surpriseData));
-    const params = new URLSearchParams({
-      userName,
-      partnerName,
-      reasons: JSON.stringify(reasons.filter(r => r.trim() !== ''))
-    }).toString();
-    const link = `${window.location.origin}/surprise/${surpriseId}?${params}`;
+
+    // POST a la API
+    const response = await fetch('https://TU_API_URL/surprise', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(surpriseData)
+    });
+    const result = await response.json();
+    const surpriseId = result._id; // El id de MongoDB
+
+    const link = `${window.location.origin}/surprise/${surpriseId}`;
     setGeneratedLink(link);
     setStep(5);
   };
