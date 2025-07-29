@@ -18,7 +18,10 @@
     "lucide-react": "^0.525.0",
     "mongodb": "^6.18.0",
     "mongoose": "^8.16.5",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.7.1",
+    "swagger": "^0.7.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
