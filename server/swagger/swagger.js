@@ -8,12 +8,6 @@ const swaggerDefinition = {
     description: 'API para sorpresas románticas',
   },
   components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-      },
-    },
     schemas: {
       Surprise: {
         type: 'object',
@@ -22,7 +16,14 @@ const swaggerDefinition = {
           userName: { type: 'string' },
           reasons: { type: 'array', items: { type: 'string' } },
           partnerName: { type: 'string' },
-          timestamp: { type: 'number' }
+          timestamp: { type: 'number' },
+          photo: { type: 'string', nullable: true }, // base64 o URL
+          extraReasons: {
+            type: 'array',
+            items: { type: 'string' },
+            maxItems: 100,
+            nullable: true
+          }
         }
       }
     }

@@ -8,6 +8,8 @@ interface SurpriseData {
   reasons: string[];
   partnerName: string;
   timestamp: number;
+  photo: string | null;
+  extraReasons: string[] | null;
 }
 
 const SurprisePage: React.FC = () => {
@@ -78,7 +80,6 @@ const SurprisePage: React.FC = () => {
     "Por cómo me amas más allá de las palabras", "Por tu manera de ser mi regalo de la vida"
   ];
 
-  // ...existing code...
   useEffect(() => {
     if (id) {
       fetch(`http://localhost:4000/surprise/${id}`)
@@ -86,7 +87,6 @@ const SurprisePage: React.FC = () => {
         .then(data => setSurpriseData(data));
     }
   }, [id]);
-  // ...existing code...
 
   const handleGiftClick = (index: number) => {
     if (index === 3 && openedGifts.slice(0, 3).some(opened => !opened)) {
@@ -119,7 +119,6 @@ const SurprisePage: React.FC = () => {
 
   return (
     <div className="min-h-screen px-4 py-8 relative overflow-hidden">
-      {/* Floating Hearts Background */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <Heart
@@ -214,6 +213,18 @@ const SurprisePage: React.FC = () => {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+              {surpriseData.photo && (
+                <div className="flex justify-center mb-8 animate__animated animate__fadeInDown">
+                  <img
+                    src={surpriseData.photo}
+                    alt="Foto pareja"
+                    className="rounded-2xl shadow-lg border-4 border-pink-200 max-h-60"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+              )}  
+
               {/* First 3 user reasons */}
               {surpriseData.reasons.map((reason, index) => (
                 <motion.div
@@ -317,20 +328,18 @@ const SurprisePage: React.FC = () => {
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                    {extraReasons.map((reason, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-xl border border-pink-200 hover:shadow-md transition-shadow duration-300"
-                      >
-                        <p className="text-gray-700 font-modern text-sm">
-                          {reason}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
+                  {(surpriseData.extraReasons || extraReasons).map((reason, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-xl border border-pink-200 hover:shadow-md transition-shadow duration-300"
+                    >
+                      <p className="text-gray-700 font-modern text-sm">{reason}</p>
+                    </motion.div>
+                  ))}
+                </div>
 
                   <div className="text-center mt-8">
                     <div className="flex justify-center items-center gap-2">
