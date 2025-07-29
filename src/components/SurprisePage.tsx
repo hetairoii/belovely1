@@ -81,7 +81,7 @@ const SurprisePage: React.FC = () => {
   // ...existing code...
   useEffect(() => {
     if (id) {
-      fetch(`https://TU_API_URL/surprise/${id}`)
+      fetch(`http://localhost:4000/surprise/${id}`)
         .then(res => res.json())
         .then(data => setSurpriseData(data));
     }
