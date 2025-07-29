@@ -8,6 +8,8 @@ interface SurpriseData {
   reasons: string[];
   partnerName: string;
   timestamp: number;
+  photo: string | null;
+  extraReasons: string[] | null;
 }
 
 const SurprisePage: React.FC = () => {
@@ -80,31 +82,11 @@ const SurprisePage: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      const data = localStorage.getItem(`surprise_${id}`);
-      if (data) {
-        setSurpriseData(JSON.parse(data));
-      } else {        
-        const params = new URLSearchParams(location.search);
-        const userName = params.get('userName');
-        const partnerName = params.get('partnerName');
-        const reasonsRaw = params.get('reasons');
-        let reasons: string[] = [];
-        try {
-          reasons = reasonsRaw ? JSON.parse(reasonsRaw) : [];
-        } catch {
-          reasons = [];
-        }
-        if (userName && partnerName && reasons.length === 3) {
-          setSurpriseData({
-            userName,
-            partnerName,
-            reasons,
-            timestamp: Date.now(),
-          });
-        }
-      }
+      fetch(`http://localhost:4000/surprise/${id}`)
+        .then(res => res.json())
+        .then(data => setSurpriseData(data));
     }
-  }, [id, location.search]);
+  }, [id]);
 
   const handleGiftClick = (index: number) => {
     if (index === 3 && openedGifts.slice(0, 3).some(opened => !opened)) {
@@ -137,7 +119,6 @@ const SurprisePage: React.FC = () => {
 
   return (
     <div className="min-h-screen px-4 py-8 relative overflow-hidden">
-      {/* Floating Hearts Background */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <Heart
@@ -232,6 +213,18 @@ const SurprisePage: React.FC = () => {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+              {surpriseData.photo && (
+                <div className="flex justify-center mb-8 animate__animated animate__fadeInDown">
+                  <img
+                    src={surpriseData.photo}
+                    alt="Foto pareja"
+                    className="rounded-2xl shadow-lg border-4 border-pink-200 max-h-60"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+              )}  
+
               {/* First 3 user reasons */}
               {surpriseData.reasons.map((reason, index) => (
                 <motion.div
@@ -335,20 +328,18 @@ const SurprisePage: React.FC = () => {
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                    {extraReasons.map((reason, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-xl border border-pink-200 hover:shadow-md transition-shadow duration-300"
-                      >
-                        <p className="text-gray-700 font-modern text-sm">
-                          {reason}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
+                  {(surpriseData.extraReasons || extraReasons).map((reason, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-xl border border-pink-200 hover:shadow-md transition-shadow duration-300"
+                    >
+                      <p className="text-gray-700 font-modern text-sm">{reason}</p>
+                    </motion.div>
+                  ))}
+                </div>
 
                   <div className="text-center mt-8">
                     <div className="flex justify-center items-center gap-2">

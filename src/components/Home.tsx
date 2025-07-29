@@ -1,19 +1,92 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Gift, ArrowRight } from 'lucide-react';
+import { set } from 'mongoose';
+
+const defaultExtraReasons = [
+  "Por tu sonrisa que ilumina mis días", "Por cómo me abrazas cuando más lo necesito",
+  "Por tu forma única de ver el mundo", "Por hacer que lo ordinario se vuelva extraordinario",
+  "Por tu risa contagiosa", "Por cómo me apoyas en mis sueños",
+  "Por tu paciencia infinita", "Por los pequeños detalles que me demuestras",
+  "Por tu forma de cocinar con amor", "Por cómo cuidas de mí cuando estoy enfermo/a",
+  "Por tus mensajes de buenos días", "Por cómo me haces sentir especial",
+  "Por tu forma de bailar", "Por escucharme sin juzgar",
+  "Por tus abrazos que lo curan todo", "Por tu forma de decir mi nombre",
+  "Por compartir tus secretos conmigo", "Por tu manera de ser auténtico/a",
+  "Por hacer que cada día sea una aventura", "Por tu corazón generoso",
+  "Por cómo me miras", "Por tu forma de caminar tomado/a de mi mano",
+  "Por los planes que hacemos juntos", "Por tu forma de consolarme",
+  "Por tus besos espontáneos", "Por cómo me entiendes sin palabras",
+  "Por tu forma de reír", "Por compartir tus comidas favoritas conmigo",
+  "Por tu manera de sorprenderme", "Por cómo me haces sentir en casa",
+  "Por tus caricias suaves", "Por tu forma de ser romántico/a",
+  "Por cómo me motivas a ser mejor", "Por tu paciencia con mis defectos",
+  "Por los momentos de silencio cómodo", "Por tu forma de decir 'te amo'",
+  "Por cómo me haces reír hasta llorar", "Por tu manera de ser comprensivo/a",
+  "Por los pequeños besos en la frente", "Por cómo celebras mis logros",
+  "Por tu forma de hacerme sentir seguro/a", "Por tus mensajes de buenas noches",
+  "Por cómo me abrazas por la espalda", "Por tu manera de ser cariñoso/a",
+  "Por los planes espontáneos", "Por cómo me cuidas",
+  "Por tu forma de ser mi mejor amigo/a", "Por tus ojos que hablan",
+  "Por cómo me haces sentir único/a", "Por tu manera de ser protector/a",
+  "Por los momentos de complicidad", "Por tu forma de hacerme sonreír",
+  "Por cómo compartes tu tiempo conmigo", "Por tu manera de ser detallista",
+  "Por los abrazos largos", "Por cómo me apoyas en todo",
+  "Por tu forma de ser mi confidente", "Por tus gestos de amor diarios",
+  "Por cómo me haces sentir amado/a", "Por tu manera de ser tierno/a",
+  "Por los momentos íntimos", "Por tu forma de hacerme sentir importante",
+  "Por cómo me complementas", "Por tu manera de ser mi compañero/a",
+  "Por los recuerdos que creamos", "Por tu forma de hacerme feliz",
+  "Por cómo me inspiras", "Por tu manera de ser mi refugio",
+  "Por los proyectos que planeamos", "Por tu forma de amarme incondicionalmente",
+  "Por cómo me haces crecer", "Por tu manera de ser mi motivación",
+  "Por los sueños que compartimos", "Por tu forma de hacerme sentir completo/a",
+  "Por cómo cuidas nuestro amor", "Por tu manera de ser mi esperanza",
+  "Por los momentos perfectos", "Por tu forma de hacerme sentir vivo/a",
+  "Por cómo me amas tal como soy", "Por tu manera de ser mi todo",
+  "Por cada día a tu lado", "Por tu forma de hacer que valga la pena",
+  "Por cómo me haces soñar", "Por tu manera de ser mi felicidad",
+  "Por los 'te amo' susurrados", "Por tu forma de ser mi mundo",
+  "Por cómo me haces sentir en las nubes", "Por tu manera de ser mi alma gemela",
+  "Por cada momento compartido", "Por tu forma de ser mi vida",
+  "Por cómo me amas sin condiciones", "Por tu manera de ser mi eternidad",
+  "Por cada sonrisa que me regalas", "Por tu forma de ser mi universo",
+  "Por cómo haces que todo tenga sentido", "Por tu manera de ser mi destino",
+  "Por cada latido de tu corazón", "Por tu forma de ser mi hogar",
+  "Por cómo me amas más cada día", "Por tu manera de ser mi para siempre"
+];
 
 const Home: React.FC = () => {
+  
   const [step, setStep] = useState(1);
   const [userName, setUserName] = useState('');
   const [reasons, setReasons] = useState(['', '', '']);
   const [partnerName, setPartnerName] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [extraReasons, setExtraReasons] = useState<string[]>(defaultExtraReasons); // defaultExtraReasons es tu array predeterminado de 100 razones
+  const [showExtraReasons, setShowExtraReasons] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleNext = () => {
     if (step < 4) {
       setStep(step + 1);
     }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => setPhoto(ev.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleExtraReasonChange = (index: number, value: string) => {
+    const updated = [...extraReasons];
+    updated[index] = value;
+    setExtraReasons(updated);
   };
 
   const handleReasonChange = (index: number, value: string) => {
@@ -22,22 +95,26 @@ const Home: React.FC = () => {
     setReasons(newReasons);
   };
 
-  const generateSurprise = () => {
-    const surpriseId = Math.random().toString(36).substr(2, 9);
+  const generateSurprise = async () => {
     const surpriseData = {
       userName,
       reasons: reasons.filter(r => r.trim() !== ''),
       partnerName,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      photo: photo || null,
+      extraReasons: extraReasons.length === 100 ? extraReasons : defaultExtraReasons
     };
-    
-    localStorage.setItem(`surprise_${surpriseId}`, JSON.stringify(surpriseData));
-    const params = new URLSearchParams({
-      userName,
-      partnerName,
-      reasons: JSON.stringify(reasons.filter(r => r.trim() !== ''))
-    }).toString();
-    const link = `${window.location.origin}/surprise/${surpriseId}?${params}`;
+
+    // POST a la API
+    const response = await fetch('http://localhost:4000/surprise', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(surpriseData)
+    });
+    const result = await response.json();
+    const surpriseId = result._id;
+
+    const link = `${window.location.origin}/surprise/${surpriseId}`;
     setGeneratedLink(link);
     setStep(5);
   };
@@ -82,7 +159,7 @@ const Home: React.FC = () => {
             BeLovely1
           </h1>
           <p className="text-gray-600 font-modern">
-            Crea una sorpresa especial para esa persona que amas
+            Crea una linda sorpresa con más de 100 razones por las que amas a esa persona especial ❤️
           </p>
         </div>
 
@@ -142,6 +219,48 @@ const Home: React.FC = () => {
                   />
                 </div>
               ))}
+              <div className="mb-6">
+              <label className="block font-modern text-gray-700 mb-2">Foto opcional con tu pareja:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="block w-full text-sm text-pink-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 transition"
+              />
+              {photo && (
+                <img
+                  src={photo}
+                  alt="Foto pareja"
+                  className="rounded-2xl mt-4 mx-auto shadow-lg border-4 border-pink-100 max-h-48 animate__animated animate__fadeIn"
+                  style={{ objectFit: 'cover' }}
+                />
+              )}
+            </div>
+
+            <div className="mb-6">
+                <button
+                type="button"
+                onClick={() => setShowExtraReasons(!showExtraReasons)}
+                className="bg-gradient-to-r from-pink-200 to-rose-200 text-pink-700 font-semibold py-2 px-4 rounded-xl shadow hover:from-pink-300 hover:to-rose-300 transition-all"
+                >
+                {showExtraReasons ? 'Ocultar' : 'Editar'} las 100 razones 👀
+                </button>
+              {showExtraReasons && (
+                <div className="mt-4 max-h-80 overflow-y-auto bg-white/90 rounded-xl p-4 border border-pink-100 shadow-inner animate__animated animate__fadeIn">
+                  {extraReasons.map((reason, idx) => (
+                    <div key={idx} className="mb-2 flex items-center">
+                      <span className="font-modern text-xs text-pink-500 mr-2">{idx + 1}.</span>
+                      <input
+                        type="text"
+                        value={reason}
+                        onChange={e => handleExtraReasonChange(idx, e.target.value)}
+                        className="flex-1 p-2 rounded border border-pink-200 focus:border-pink-400 font-modern text-xs"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             </div>
           </div>
         )}
@@ -215,6 +334,8 @@ const Home: React.FC = () => {
                 setReasons(['', '', '']);
                 setPartnerName('');
                 setGeneratedLink('');
+                setPhoto(null);
+                setExtraReasons(defaultExtraReasons);
               }}
               className="text-pink-500 hover:text-pink-600 transition-colors duration-300 font-modern text-sm"
             >
