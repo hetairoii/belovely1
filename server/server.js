@@ -9,7 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.mongo_uri);
+const PORT = process.env.PORT || 4000;
+
 
 const SurpriseSchema = new mongoose.Schema({
   userName: String,
@@ -30,4 +31,12 @@ app.get('/surprise/:id', async (req, res) => {
   res.json(surprise);
 });
 
-app.listen(4000, () => console.log('API running on port 4000'));
+mongoose.connect(process.env.mongo_uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+  app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+});
