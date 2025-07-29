@@ -82,7 +82,7 @@ const SurprisePage: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:4000/surprise/${id}`)
+      fetch(`https://belovely1.onrender.com/surprise/${id}`)
         .then(res => res.json())
         .then(data => setSurpriseData(data));
     }
