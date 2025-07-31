@@ -46,14 +46,18 @@
 ## ⚙️ Instalación local
 
 1. **Clona el repositorio**     
+    ```
     bash
     git clone https://github.com/youruser/belovely1.git
     cd belovely1
+    ```
 
 2. **Instala dependencias**
+    ```
     npm install
     cd server
     npm install
+    ```
 
 3. **Configura variables de entorno**
 - Crea un archivo .env en /server con la cadena de conexión a MongoDB
