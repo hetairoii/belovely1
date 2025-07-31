@@ -45,7 +45,42 @@
 
 ## ⚙️ Instalación local
 
-**Clona el repositorio**
-     ```bash
-     git clone https://github.com/youruser/belovely1.git
-     cd belovely1
+1. **Clona el repositorio**     
+    bash
+    git clone https://github.com/youruser/belovely1.git
+    cd belovely1
+
+2. **Instala dependencias**
+    npm install
+    cd server
+    npm install
+
+3. **Configura variables de entorno**
+- Crea un archivo .env en /server con la cadena de conexión a MongoDB
+    mongo_uri=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/belovely1
+
+4. **Inicia el frontend y el backend**
+    npm run start:all
+
+---
+
+## 📖 API
+
+Documentación Swagger disponible en:
+https://<tu-backend>.onrender.com/api-docs
+
+---
+
+## 💌 Créditos
+
+Creado con mucho amor por Matias Silveira AKA @hetairoii para todos los enamorados del mundo ;).
+¡Haz que cada día sea especial con BeLovely1! 💕
+
+---
+
+📝 Licencia
+MIT
+
+---
+
+Dale un buen regalito a tu pareja con Belovely1 :P
