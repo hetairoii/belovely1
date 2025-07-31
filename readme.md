@@ -61,10 +61,14 @@
 
 3. **Configura variables de entorno**
 - Crea un archivo .env en /server con la cadena de conexión a MongoDB
+    ```
     mongo_uri=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/belovely1
+    ```
 
 4. **Inicia el frontend y el backend**
+    ```
     npm run start:all
+    ```
 
 ---
 
